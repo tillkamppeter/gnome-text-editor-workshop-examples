@@ -1,0 +1,48 @@
+name: gnome-text-editor-local-deb
+base: core22
+grade: stable
+confinement: strict
+summary: GNOME's Text Editor
+description: GNOME's Text Editor, from local binary .deb file, only for one architecture given by the .deb file, not suitable for Snap Store. To be used to quickly prepare a proprietary .deb for use in an all-Snap distro.
+version: "42.2"
+
+# this is not used or needed for anything other than to trigger automatic
+# installation of the cups snap via "default-provider: cups"
+plugs:
+  foo-install-cups:
+    interface: content
+    content: foo
+    default-provider: cups
+    target: $SNAP_DATA/foo
+
+slots:
+  # for GtkApplication registration
+  gnome-text-editor:
+    interface: dbus
+    bus: session
+    name: org.gnome.TextEditor
+
+layout:
+  /usr/share/gnome-text-editor:
+    bind: $SNAP/usr/share/gnome-text-editor
+
+apps:
+  gnome-text-editor:
+    extensions: [gnome]
+    command: usr/bin/gnome-text-editor
+    desktop: usr/share/applications/org.gnome.TextEditor.desktop
+    common-id: org.gnome.TextEditor.desktop
+    plugs:
+      - gsettings
+      - mount-observe
+      - cups
+      - home
+
+parts:
+  gnome-text-editor:
+    plugin: dump
+    # Download with "apt download gnome-text-editor" (on Jammy) or download from
+    # https://launchpad.net/ubuntu/+source/gnome-text-editor/42.2-0ubuntu1 for
+    # the needed architecture before building the Snap
+    source: gnome-text-editor_42.2-0ubuntu1_amd64.deb
+    source-type: deb
