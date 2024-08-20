@@ -1,19 +1,10 @@
 name: gnome-text-editor-repo-deb
-base: core22
+base: core24
 grade: stable
 confinement: strict
 summary: GNOME's Text Editor
 description: GNOME's Text Editor, from binary .deb file from package repository, buildable for all architectures, will be built for all architectures when put into the Snap Store. Method for quick snapping of software available in a package repository and putting it into the Snap Store.
-version: "42.2"
-
-# this is not used or needed for anything other than to trigger automatic
-# installation of the cups snap via "default-provider: cups"
-plugs:
-  foo-install-cups:
-    interface: content
-    content: foo
-    default-provider: cups
-    target: $SNAP_DATA/foo
+version: "46.3"
 
 slots:
   # for GtkApplication registration
@@ -32,11 +23,14 @@ apps:
     command: usr/bin/gnome-text-editor
     desktop: usr/share/applications/org.gnome.TextEditor.desktop
     common-id: org.gnome.TextEditor.desktop
+    environment:
+      GTK_USE_PORTAL: "1"
+      GDK_DEBUG: "portals"
     plugs:
-      - gsettings
+      - home
+      - removable-media
       - mount-observe
       - cups
-      - home
 
 parts:
   gnome-text-editor:
@@ -51,3 +45,11 @@ parts:
       rm -rf $CRAFT_PART_INSTALL/*
       dpkg-deb -R $CRAFT_PART_SRC/*.deb $CRAFT_PART_INSTALL
       craftctl default
+
+  libraries:
+    after: [ gnome-text-editor ]
+    plugin: nil
+    stage-packages:
+      - libeditorconfig0
+    prime:
+      - usr/lib/*/libeditorconfig.so.*
