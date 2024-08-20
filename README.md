@@ -26,22 +26,22 @@ Examples:
   repository](https://github.com/ubuntu/gnome-text-editor) has Snap
   automation so that it automatically updates itself if a new upstream
   version gets released. So use the original repo whenever possible,
-  the `snapcraft.yaml` is more for comparing the different methods.
+  this `snapcraft.yaml` is more for comparing the different methods.
 
 - `local-deb/`: Download the binary Debian package of
-  gnome-text-editor for Ubuntu 22.04 LTS (Jammy Jellyfish) into this
+  gnome-text-editor for Ubuntu 24.04 LTS (Noble Numbat) into this
   directory and then run `snapcraft` and the Debian package will get
   converted into a Snap. This is an example how one could snap
   proprietary (closed-source) software which comes in a Debian
   package, to allow installing it in non-Debian-based distros or in
-  all-Snap immutable distros, like Ubuntu Core. Not that you can only
+  all-Snap immutable distros, like Ubuntu Core. Note that you can only
   build a Snap for the architecture for which the Debian package is.
   This is mainly intended for system administrators to solve problems
   locally, not for the Snap Store.
 
 - `repo-deb/`: The build process downloads the binary Debian package
   of GNOME Text Editor from the Ubuntu repositories for the
-  architecture and the Ubuntu version (base Snap, here `core22`) under
+  architecture and the Ubuntu version (base Snap, here `core24`) under
   which the build process is running. So this method could be used for
   publishing a Snap in the Snap Store. Now one wonders why not simply
   add `gnome-text-editor` to the `stage-packages:` instead of having
@@ -49,7 +49,7 @@ Examples:
   downloading and unpacking the Debian package we do not pull in its
   dependencies. And these we do not need as by using the "gnome"
   snapcraft extension we make the installation of this Snap
-  auto-install the gnome-42-2204 content-provider Snap which contains
+  auto-install the gnome-46-2404 content-provider Snap which contains
   all GNOME libraries.
 
 - `stage-packages/`: Here we simply get the Debian package of the
@@ -57,15 +57,16 @@ Examples:
   packages we depend on) and do not specify any source or
   `override-pull:` to get hold on the GNOME Text Editor itself. This
   makes a super-simple `snapcraft.yaml`, but requesting a package
-  under `stage-packages:` also installes all the dependencies of this
+  under `stage-packages:` also installs all the dependencies of this
   package, meaning all the GNOME libraries in our case, which are
-  already shared between Snaps via the the gnome-42-2204
+  already shared between Snaps via the the gnome-46-2404
   content-provider Snap. We could clean up the mess by a part running
   after the `gnome-text-editor:` part, as it is done in the
   [gnome-calculator](https://github.com/ubuntu/gnome-calculator) Snap
-  ([`cleanup:` part](https://github.com/ubuntu/gnome-calculator/blob/stable/snapcraft.yaml#L83))
+  ([`cleanup:` part](https://github.com/ubuntu/gnome-calculator/blob/stable/snapcraft.yaml#L82))
   ...
 
+**Original `README.md` text below**
 
 Below you will find some instructions to help you contribute to this snap. The general workflow will be to submit PRs from your fork onto the "stable" branch. Once the pull request has been *submitted*, there is a GitHub action that will automatically launch a build of the snap that you can use for testing. And then once the PR has been *merged* the GitHub action will launch a build on launchpad that will be automatically uploaded to the snap store, in the candidate channel, for more extensive testing.
 
